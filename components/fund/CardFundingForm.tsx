@@ -27,42 +27,36 @@ export default function CardFundingForm() {
     }
 
     try {
-      // Generate transaction ID
-      const id = 'TXN-' + Math.random().toString(36).substring(2, 10).toUpperCase();
-
-      // Create Transaction object
-      const tx: Transaction = {
-        id,
-        type: 'FUND',
+      // Create transaction
+      const tx: Transaction = await createTransaction(
+        'FUND',
         amount,
-        balanceAfter: balance + amount,
-        senderEmail: email,
-        recipientName: 'Wallet Funding',
-        recipientEmail: email,
-        recipientAccount: 'N/A',
-        bankName: 'N/A',
-        swiftCode: 'N/A',
-        currency: 'USD',
-        transactionStatus: 'Successful',
-        createdAt: new Date().toISOString(),
-        email, // required field for type
-      };
+        balance, // pass current balance from context
+        {
+          senderEmail: email,
+          recipientName: 'Wallet Funding',
+          recipientEmail: email,
+          recipientAccount: 'N/A',
+          bankName: 'N/A',
+          swiftCode: 'N/A',
+          currency: 'USD',
+          transactionStatus: 'Successful',
+          alertCaption: 'Wallet funded successfully',
+        }
+      );
 
-      // Save transaction in backend (optional)
-      await createTransaction(tx.type, tx.amount, balance, tx);
-
-      // Update global wallet state
+      // Add transaction globally (balance auto-updates in context)
       addTransaction(tx);
 
       setSuccess(true);
-      setError('');
+      setError(''); // Clear any previous errors
 
-      // Redirect to receipt page after 1s
+      // Redirect to receipt page
       setTimeout(() => {
         router.push(`/receipt/${tx.id}`);
       }, 1000);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       setError('Failed to fund wallet, please try again later.');
     }
   };
@@ -73,7 +67,6 @@ export default function CardFundingForm() {
         <TextField
           label="Amount"
           type="number"
-          value={amount}
           onChange={(e) => setAmount(Number(e.target.value))}
           error={!!error}
           helperText={error}
@@ -81,7 +74,6 @@ export default function CardFundingForm() {
 
         <TextField
           label="Email for Receipt"
-          value={email}
           onChange={(e) => setEmail(e.target.value)}
           error={!!error}
           helperText={error}
@@ -100,14 +92,14 @@ export default function CardFundingForm() {
         </Button>
       </Stack>
 
-      <Snackbar open={success} autoHideDuration={2000} onClose={() => setSuccess(false)}>
+      <Snackbar open={success} autoHideDuration={2000}>
         <Alert severity="success">
           Wallet funded successfully with ${amount.toFixed(2)} 🎉
         </Alert>
       </Snackbar>
 
       {error && (
-        <Snackbar open={!!error} autoHideDuration={2000} onClose={() => setError('')}>
+        <Snackbar open={!!error} autoHideDuration={2000}>
           <Alert severity="error">{error}</Alert>
         </Snackbar>
       )}
