@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Container, Typography, Grid, Paper, Box, IconButton, Button } from '@mui/material';
+import { Container, Typography, Paper, Box, IconButton, Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import SendIcon from '@mui/icons-material/Send';
@@ -118,98 +118,87 @@ export default function Home() {
           Quick Actions
         </Typography>
 
-        {/* Big Quick Actions Grid */}
-<Box
-  mb={6}
-  sx={{
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    gap: { xs: 2, md: 4 },
-  }}
->
-  {actions.map((action) => (
-    <Box
-      key={action.label}
-      sx={{
-        // ✅ 2 columns on mobile, auto on desktop
-        width: { xs: '45%', md: 'auto' },
-        flexGrow: { md: 1 },
-      }}
-    >
-      <Paper
-        onClick={() => router.push(action.route)}
-        elevation={4}
-        sx={{
-          p: { xs: 2, md: 4 },
-          textAlign: 'center',
-          borderRadius: 3,
-          cursor: 'pointer',
-          transition: 'all 0.3s ease',
-          backgroundColor: action.color,
-          color: '#fff',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: 120,
-          '&:hover': {
-            transform: 'translateY(-5px) scale(1.03)',
-            boxShadow: '0 12px 24px rgba(0,0,0,0.3)',
-          },
-        }}
-      >
-        <Box sx={{ mb: 1 }}>{action.icon}</Box>
-        <Typography variant="h6" fontWeight="bold">
-          {action.label}
-        </Typography>
-      </Paper>
-    </Box>
-  ))}
-</Box>
-
-
-
-        {/* Row Quick Actions */}
-        <Paper
+        {/* Flex Quick Actions */}
+        <Box
+          mb={6}
           sx={{
-            p: { xs: 2, md: 4 },
-            m: { xs: 0, md: 6 },
-            mb: 5,
-            borderRadius: 3,
-            backgroundColor: '#fff',
-            mx: { xs: 0, md: 3 },
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            gap: 2,
           }}
-          elevation={3}
         >
-          <Grid container spacing={{ xs: 1, md: 8 }}>
+          {actions.map((action) => (
+            <Paper
+              key={action.label}
+              onClick={() => router.push(action.route)}
+              elevation={4}
+              sx={{
+                width: { xs: '45%', md: '23%' }, // 2 per row on mobile, 4 per row on desktop
+                p: { xs: 2, md: 4 },
+                textAlign: 'center',
+                borderRadius: 3,
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                backgroundColor: action.color,
+                color: '#fff',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: 120,
+                '&:hover': {
+                  transform: 'translateY(-5px) scale(1.03)',
+                  boxShadow: '0 12px 24px rgba(0,0,0,0.3)',
+                },
+              }}
+            >
+              <Box sx={{ mb: 1 }}>{action.icon}</Box>
+              <Typography variant="h6" fontWeight="bold">
+                {action.label}
+              </Typography>
+            </Paper>
+          ))}
+        </Box>
+
+        {/* Optional Row-style Buttons (Flex) */}
+        <Paper sx={{ p: 3, borderRadius: 3, mb: 5, backgroundColor: '#fff' }} elevation={3}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 2,
+              justifyContent: 'space-between',
+            }}
+          >
             {actions.map((action) => (
-              <Grid item xs={4} key={action.label}>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  sx={{
-                    m: { xs: 1, md: 5 },
-                    borderColor: '#ccc',
-                    color: '#000',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    py: 1,
-                    '&:hover': {
-                      color: action.color,
-                      borderColor: action.color,
-                      transform: 'translateY(-3px)',
-                    },
-                  }}
-                  onClick={() => router.push(action.route)}
-                >
-                  {action.icon}
-                  <Typography variant="body2" sx={{ mt: 0.5 }}>{action.label}</Typography>
-                </Button>
-              </Grid>
+              <Button
+                key={action.label}
+                fullWidth
+                variant="outlined"
+                sx={{
+                  flex: { xs: '1 1 45%', md: '1 1 23%' },
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  py: 1,
+                  borderColor: '#ccc',
+                  color: '#000',
+                  '&:hover': {
+                    color: action.color,
+                    borderColor: action.color,
+                    transform: 'translateY(-3px)',
+                  },
+                }}
+                onClick={() => router.push(action.route)}
+              >
+                {action.icon}
+                <Typography variant="body2" sx={{ mt: 0.5 }}>
+                  {action.label}
+                </Typography>
+              </Button>
             ))}
-          </Grid>
+          </Box>
         </Paper>
       </Container>
     </>
