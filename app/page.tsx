@@ -1,65 +1,217 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import { Container, Typography, Grid, Paper, Box, IconButton, Button } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import SendIcon from '@mui/icons-material/Send';
+import HistoryIcon from '@mui/icons-material/History';
+import SettingsIcon from '@mui/icons-material/Settings';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import ShareIcon from '@mui/icons-material/Share';
+import ViewAgendaIcon from '@mui/icons-material/ViewAgenda';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { useWallet } from '@/context/WalletContext';
 
 export default function Home() {
+  const { balance } = useWallet();
+  const [showBalance, setShowBalance] = useState(true);
+  const [points, setPoints] = useState(120);
+  const router = useRouter();
+
+  const actions = [
+    { label: 'Add Fund', route: '/FundWalletDialog', color: '#4caf50', icon: <AttachMoneyIcon fontSize="large" /> },
+    { label: 'Send Money', route: '/SendMoneyDialog', color: '#f44336', icon: <SendIcon fontSize="large" /> },
+    { label: 'Transactions', route: '/transactions', color: '#1976d2', icon: <HistoryIcon fontSize="large" /> },
+    { label: 'App Settings', route: '/settings', color: '#ff9800', icon: <SettingsIcon fontSize="large" /> },
+  ];
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <>
+      {/* Overview Section */}
+      <Box
+        sx={{
+          width: '100%',
+          p: 4,
+          background: 'linear-gradient(135deg, #2196f3 0%, #90caf9 100%)',
+          color: '#fff',
+          position: 'relative',
+        }}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+          <IconButton sx={{ color: '#fff' }}>
+            <RefreshIcon />
+          </IconButton>
+          <Box>
+            <IconButton sx={{ color: '#fff' }}>
+              <NotificationsNoneIcon />
+            </IconButton>
+            <IconButton sx={{ color: '#fff' }}>
+              <ShareIcon />
+            </IconButton>
+            <IconButton sx={{ color: '#fff' }}>
+              <ViewAgendaIcon />
+            </IconButton>
+          </Box>
+        </Box>
+
+        <Typography variant="h5" fontWeight="bold">
+          Overview
+        </Typography>
+        <Typography variant="subtitle1" mb={3}>
+          Digital Banking
+        </Typography>
+      </Box>
+
+      {/* Wallet Container */}
+      <Container sx={{ mt: 8, position: 'relative' }}>
+        <Paper
+          elevation={8}
+          sx={{
+            p: 8,
+            borderRadius: 4,
+            backgroundColor: '#1976d2',
+            color: '#fff',
+            position: 'relative',
+          }}
+        >
+          {/* Points */}
+          <Box sx={{ position: 'absolute', top: 16, right: 16, textAlign: 'right' }}>
+            <Typography variant="subtitle2">Points Available</Typography>
+            <Typography variant="h6" fontWeight="bold">{points}</Typography>
+          </Box>
+
+          {/* Balance & Eye */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 140 }}>
+            <Typography variant="subtitle2" sx={{ mb: 1 }}>Total Balance</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Typography variant="h3" fontWeight="bold">
+                {showBalance ? `$${balance.toFixed(2)}` : '******'}
+              </Typography>
+              <IconButton sx={{ ml: 2, color: '#fff' }} onClick={() => setShowBalance(!showBalance)}>
+                {showBalance ? <VisibilityIcon /> : <VisibilityOffIcon />}
+              </IconButton>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+              <Typography variant="body2">Account: ******3445677</Typography>
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: '#ffeb3b',
+                  color: '#000',
+                  fontWeight: 'bold',
+                  '&:hover': { backgroundColor: '#fdd835' },
+                  mt: { xs: 2, sm: 0 },
+                }}
+                onClick={() => router.push('/buy-points')}
+              >
+                Buy Points
+              </Button>
+            </Box>
+          </Box>
+        </Paper>
+
+        {/* Quick Actions */}
+        <Typography variant="h5" fontWeight="bold" mb={2} mt={6} color="text.primary">
+          Quick Actions
+        </Typography>
+
+        {/* Big Quick Actions Grid */}
+<Box
+  mb={6}
+  sx={{
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: { xs: 2, md: 4 },
+  }}
+>
+  {actions.map((action) => (
+    <Box
+      key={action.label}
+      sx={{
+        // ✅ 2 columns on mobile, auto on desktop
+        width: { xs: '45%', md: 'auto' },
+        flexGrow: { md: 1 },
+      }}
+    >
+      <Paper
+        onClick={() => router.push(action.route)}
+        elevation={4}
+        sx={{
+          p: { xs: 2, md: 4 },
+          textAlign: 'center',
+          borderRadius: 3,
+          cursor: 'pointer',
+          transition: 'all 0.3s ease',
+          backgroundColor: action.color,
+          color: '#fff',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: 120,
+          '&:hover': {
+            transform: 'translateY(-5px) scale(1.03)',
+            boxShadow: '0 12px 24px rgba(0,0,0,0.3)',
+          },
+        }}
+      >
+        <Box sx={{ mb: 1 }}>{action.icon}</Box>
+        <Typography variant="h6" fontWeight="bold">
+          {action.label}
+        </Typography>
+      </Paper>
+    </Box>
+  ))}
+</Box>
+
+
+
+        {/* Row Quick Actions */}
+        <Paper
+          sx={{
+            p: { xs: 2, md: 4 },
+            m: { xs: 0, md: 6 },
+            mb: 5,
+            borderRadius: 3,
+            backgroundColor: '#fff',
+            mx: { xs: 0, md: 3 },
+          }}
+          elevation={3}
+        >
+          <Grid container spacing={{ xs: 1, md: 8 }}>
+            {actions.map((action) => (
+              <Grid item xs={4} key={action.label}>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  sx={{
+                    m: { xs: 1, md: 5 },
+                    borderColor: '#ccc',
+                    color: '#000',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    py: 1,
+                    '&:hover': {
+                      color: action.color,
+                      borderColor: action.color,
+                      transform: 'translateY(-3px)',
+                    },
+                  }}
+                  onClick={() => router.push(action.route)}
+                >
+                  {action.icon}
+                  <Typography variant="body2" sx={{ mt: 0.5 }}>{action.label}</Typography>
+                </Button>
+              </Grid>
+            ))}
+          </Grid>
+        </Paper>
+      </Container>
+    </>
   );
 }
