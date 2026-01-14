@@ -10,14 +10,14 @@ import { useRouter } from 'next/navigation';
 
 export default function FundPage() {
   const [method, setMethod] = useState(0);
-  const { balance, transactions, updateWallet } = useWallet(); // <-- get global wallet state
+  const { balance, transactions, addTransaction } = useWallet(); // <-- get global wallet state
   const router = useRouter();
 
   const handleSuccess = (tx: Transaction) => {
     const updatedTx = [tx, ...transactions]; // preserve history
     const newBalance = Number(tx.balanceAfter) || 0;
 
-    updateWallet(newBalance, updatedTx); // update global state
+    addTransaction(tx); // update global state
 
     router.push(`/receipt/${tx.id}`);
   };
