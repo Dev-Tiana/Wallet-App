@@ -31,6 +31,7 @@ export async function createTransaction(
     type,
     amount,
     balanceAfter,
+    email: data.senderEmail, // ✅ add top-level email field
     createdAt: new Date().toISOString(),
     ...data,
   };
